@@ -11,7 +11,6 @@ import { localize } from 'i18n-calypso';
 /**
  * Internal Dependencies
  */
-import PaymentMethodForm from 'calypso/me/purchases/components/payment-method-form';
 import HeaderCake from 'calypso/components/header-cake';
 import PageViewTracker from 'calypso/lib/analytics/page-view-tracker';
 import QueryStoredCards from 'calypso/components/data/query-stored-cards';
@@ -35,8 +34,7 @@ import { recordTracksEvent } from 'calypso/state/analytics/actions';
 import Layout from 'calypso/components/layout';
 import Column from 'calypso/components/layout/column';
 import PaymentMethodSidebar from 'calypso/me/purchases/components/payment-method-sidebar';
-import PaymentMethodLoader from 'calypso/me/purchases/components/payment-method-loader';
-import { isEnabled } from '@automattic/calypso-config';
+import PaymentMethodLoader from 'calypso/me/purchases/components/payment-method-loader'
 import { concatTitle } from 'calypso/lib/react-helpers';
 import PaymentMethodSelector from '../payment-method-selector';
 import getPaymentMethodIdFromPayment from '../payment-method-selector/get-payment-method-id-from-payment';
@@ -73,11 +71,6 @@ function ChangePaymentMethod( props ) {
 		);
 	}
 
-	const recordFormSubmitEvent = () =>
-		void props.recordTracksEvent( 'calypso_purchases_credit_card_form_submit', {
-			product_slug: props.purchase.productSlug,
-		} );
-
 	const successCallback = () => {
 		props.clearPurchases();
 		page( props.getManagePurchaseUrlFor( props.siteSlug, props.purchase.id ) );
@@ -90,11 +83,7 @@ function ChangePaymentMethod( props ) {
 				purchaseId={ props.purchaseId }
 			/>
 			<PageViewTracker
-				path={
-					isEnabled( 'purchases/new-payment-methods' )
-						? '/me/purchases/:site/:purchaseId/payment-method/change/:cardId'
-						: '/me/purchases/:site/:purchaseId/payment/change/:cardId'
-				}
+				path="/me/purchases/:site/:purchaseId/payment-method/change/:cardId"
 				title={ concatTitle( titles.activeUpgrades, changePaymentMethodTitle ) }
 			/>
 
@@ -104,22 +93,11 @@ function ChangePaymentMethod( props ) {
 
 			<Layout>
 				<Column type="main">
-					{ isEnabled( 'purchases/new-payment-methods' ) ? (
-						<PaymentMethodSelector
-							purchase={ props.purchase }
-							paymentMethods={ paymentMethods }
-							successCallback={ successCallback }
-						/>
-					) : (
-						<PaymentMethodForm
-							apiParams={ { purchaseId: props.purchase.id } }
-							initialValues={ props.card }
-							purchase={ props.purchase }
-							recordFormSubmitEvent={ recordFormSubmitEvent }
-							siteSlug={ props.siteSlug }
-							successCallback={ successCallback }
-						/>
-					) }
+					<PaymentMethodSelector
+						purchase={ props.purchase }
+						paymentMethods={ paymentMethods }
+						successCallback={ successCallback }
+					/>
 				</Column>
 				<Column type="sidebar">
 					<PaymentMethodSidebar purchase={ props.purchase } />
@@ -148,13 +126,10 @@ ChangePaymentMethod.propTypes = {
 };
 
 function getChangePaymentMethodTitleCopy( currentPaymentMethodId ) {
-	if ( isEnabled( 'purchases/new-payment-methods' ) ) {
-		if ( [ 'credits', 'none' ].includes( currentPaymentMethodId ) ) {
-			return titles.addPaymentMethod;
-		}
-		return titles.changePaymentMethod;
+	if ( [ 'credits', 'none' ].includes( currentPaymentMethodId ) ) {
+		return titles.addPaymentMethod;
 	}
-	return titles.editCardDetails;
+	return titles.changePaymentMethod;
 }
 
 const mapStateToProps = ( state, { cardId, purchaseId } ) => ( {
