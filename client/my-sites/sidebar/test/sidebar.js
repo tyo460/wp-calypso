@@ -69,23 +69,6 @@ describe( 'MySitesSidebar', () => {
 			expect( wrapper.html() ).toEqual( null );
 		} );
 
-		test( 'Should return store menu item if user can use store on this site', () => {
-			const Sidebar = new MySitesSidebar( {
-				canUserUseCalypsoStore: true,
-				isSiteWpcomStore: true,
-				...defaultProps,
-				site: {
-					plan: {
-						product_slug: 'business-bundle',
-					},
-				},
-			} );
-			const Store = () => Sidebar.store();
-
-			const wrapper = shallow( <Store /> );
-			expect( wrapper.props().link ).toEqual( '/store/mysite.com' );
-		} );
-
 		test( 'Should return Calypsoified store menu item if user can use store on this site and the site is an ecommerce plan', () => {
 			const Sidebar = new MySitesSidebar( {
 				canUserUseCalypsoStore: true,
@@ -174,28 +157,6 @@ describe( 'MySitesSidebar', () => {
 
 		beforeEach( () => {
 			config.isEnabled.mockImplementation( () => true );
-		} );
-
-		test( 'Should return null item if woocommerce/store-deprecated and woocommerce/store-removed is disabled', () => {
-			// Enable all features except for store deprecation and removal
-			config.isEnabled.mockImplementation( ( feature ) => {
-				return (
-					feature !== 'woocommerce/store-deprecated' && feature !== 'woocommerce/store-removed'
-				);
-			} );
-			const Sidebar = new MySitesSidebar( {
-				canUserUseWooCommerceCoreStore: true,
-				...defaultProps,
-				site: {
-					plan: {
-						product_slug: 'business-bundle',
-					},
-				},
-			} );
-			const WooCommerce = () => Sidebar.woocommerce();
-
-			const wrapper = shallow( <WooCommerce /> );
-			expect( wrapper.html() ).toEqual( null );
 		} );
 
 		test( 'Should return null item if site has Personal plan', () => {

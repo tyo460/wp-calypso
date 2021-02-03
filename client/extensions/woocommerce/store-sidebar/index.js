@@ -95,7 +95,6 @@ class StoreSidebar extends Component {
 			settingsGeneralLoaded,
 			siteSuffix,
 			storeLocation,
-			isStoreRemoved,
 			shouldRedirectAfterInstall,
 		} = this.props;
 
@@ -114,7 +113,7 @@ class StoreSidebar extends Component {
 
 			// Don't show sidebar items if store's removed & user is going to redirect
 			// to WooCommerce after installation
-			if ( isStoreRemoved && shouldRedirectAfterInstall ) {
+			if ( shouldRedirectAfterInstall ) {
 				showAllSidebarItems = false;
 			}
 		}
@@ -143,17 +142,10 @@ class StoreSidebar extends Component {
 	};
 
 	products = () => {
-		const { site, siteSuffix, translate, isStoreRemoved } = this.props;
-		let link;
-		let selected;
+		const { site, translate } = this.props;
 
-		if ( isStoreRemoved ) {
-			link = site.URL + '/wp-admin/edit.php?post_type=product';
-			selected = false;
-		} else {
-			link = '/store/products' + siteSuffix;
-			selected = this.isItemLinkSelected( [ link, '/store/products/categories' + siteSuffix ] );
-		}
+		const link = site.URL + '/wp-admin/edit.php?post_type=product';
+		const selected = false;
 
 		const classes = classNames( {
 			products: true,
@@ -172,17 +164,9 @@ class StoreSidebar extends Component {
 	};
 
 	reviews = () => {
-		const { site, siteSuffix, translate, totalPendingReviews, isStoreRemoved } = this.props;
-		let link;
-		let selected;
-
-		if ( isStoreRemoved ) {
-			link = site.URL + '/wp-admin/edit-comments.php';
-			selected = false;
-		} else {
-			link = '/store/reviews' + siteSuffix;
-			selected = this.isItemLinkSelected( [ '/store/reviews' ] );
-		}
+		const { site, translate, totalPendingReviews } = this.props;
+		const link = site.URL + '/wp-admin/edit-comments.php';
+		const selected = false;
 
 		const classes = classNames( {
 			reviews: true,
@@ -203,17 +187,10 @@ class StoreSidebar extends Component {
 	};
 
 	orders = () => {
-		const { totalNewOrders, site, siteSuffix, translate, isStoreRemoved } = this.props;
-		let link;
-		let selected;
+		const { totalNewOrders, site, translate } = this.props;
 
-		if ( isStoreRemoved ) {
-			link = site.URL + '/wp-admin/edit.php?post_type=shop_order';
-			selected = false;
-		} else {
-			link = '/store/orders' + siteSuffix;
-			selected = this.isItemLinkSelected( [ '/store/order', '/store/orders' ] );
-		}
+		const link = site.URL + '/wp-admin/edit.php?post_type=shop_order';
+		const selected = false;
 
 		const classes = classNames( {
 			orders: true,
@@ -234,17 +211,10 @@ class StoreSidebar extends Component {
 			return null;
 		}
 
-		const { site, siteSuffix, translate, isStoreRemoved } = this.props;
-		let link;
-		let selected;
+		const { site, translate } = this.props;
 
-		if ( isStoreRemoved ) {
-			link = site.URL + '/wp-admin/edit.php?post_type=shop_coupon';
-			selected = false;
-		} else {
-			link = '/store/promotions' + siteSuffix;
-			selected = this.isItemLinkSelected( [ link ] );
-		}
+		const link = site.URL + '/wp-admin/edit.php?post_type=shop_coupon';
+		const selected = false;
 
 		const classes = classNames( {
 			promotions: true,
@@ -263,22 +233,10 @@ class StoreSidebar extends Component {
 	};
 
 	settings = () => {
-		const { site, siteSuffix, translate, isStoreRemoved } = this.props;
-		const childLinks = [
-			'/store/settings/payments',
-			'/store/settings/shipping',
-			'/store/settings/taxes',
-			'/store/settings/email',
-		];
-		let link;
-		let selected;
-		if ( isStoreRemoved ) {
-			link = site.URL + '/wp-admin/admin.php?page=wc-settings';
-			selected = false;
-		} else {
-			link = '/store/settings' + siteSuffix;
-			selected = this.isItemLinkSelected( [ link, ...childLinks ] );
-		}
+		const { site, translate } = this.props;
+
+		const link = site.URL + '/wp-admin/admin.php?page=wc-settings';
+		const selected = false;
 
 		const classes = classNames( {
 			settings: true,
@@ -331,7 +289,6 @@ function mapStateToProps( state ) {
 	const storeLocation = getStoreLocation( state, siteId );
 	const pluginsLoaded = arePluginsLoaded( state, siteId );
 	const allRequiredPluginsActive = areAllRequiredPluginsActive( state, siteId );
-	const isStoreRemoved = config.isEnabled( 'woocommerce/store-removed' );
 	const shouldRedirectAfterInstall =
 		'' === get( getCurrentQueryArguments( state ), 'redirect_after_install' );
 
@@ -348,7 +305,6 @@ function mapStateToProps( state ) {
 		siteId,
 		siteSuffix: site ? '/' + site.slug : '',
 		storeLocation,
-		isStoreRemoved,
 		shouldRedirectAfterInstall,
 	};
 }

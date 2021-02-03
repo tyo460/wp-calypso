@@ -54,7 +54,6 @@ import {
 	isJetpackSite,
 	canCurrentUserUseEarn,
 	getSiteOption,
-	canCurrentUserUseCalypsoStore,
 	canCurrentUserUseWooCommerceCoreStore,
 } from 'calypso/state/sites/selectors';
 import getSiteChecklist from 'calypso/state/selectors/get-site-checklist';
@@ -694,7 +693,6 @@ export class MySitesSidebar extends Component {
 			translate,
 			site,
 			siteSuffix,
-			canUserUseCalypsoStore,
 			canUserUseWooCommerceCoreStore,
 			isSiteWpcomStore,
 		} = this.props;
@@ -712,13 +710,11 @@ export class MySitesSidebar extends Component {
 			// So, we'll just continue to change the link here as we have been doing.
 			experience = 'wpadmin-woocommerce-core';
 			storeLink = site.options.admin_url + 'admin.php?page=wc-admin';
-		} else if ( ! canUserUseCalypsoStore ) {
+		} else {
 			return null;
 		}
 
-		const isCalypsoStoreDeprecated = isEnabled( 'woocommerce/store-deprecated' );
-
-		if ( ! isSiteWpcomStore && isCalypsoStoreDeprecated && isBusiness( site.plan ) ) {
+		if ( ! isSiteWpcomStore && isBusiness( site.plan ) ) {
 			return null;
 		}
 
@@ -769,14 +765,7 @@ export class MySitesSidebar extends Component {
 			return null;
 		}
 
-		const isCalypsoStoreDeprecatedOrRemoved =
-			isEnabled( 'woocommerce/store-deprecated' ) || isEnabled( 'woocommerce/store-removed' );
-
-		if (
-			! isCalypsoStoreDeprecatedOrRemoved ||
-			! isBusiness( site.plan ) ||
-			! canUserUseWooCommerceCoreStore
-		) {
+		if ( ! isBusiness( site.plan ) || ! canUserUseWooCommerceCoreStore ) {
 			// Right now, we only use the "WooCommerce" label for Business plan sites.
 			// eCommerce sites continue to use the "Store" label for now
 			// (see handling in `store()` above.
@@ -1168,7 +1157,6 @@ function mapStateToProps( state ) {
 		canUserPublishPosts: canCurrentUser( state, siteId, 'publish_posts' ),
 		canUserViewStats: canCurrentUser( state, siteId, 'view_stats' ),
 		canUserManagePlugins: canCurrentUserManagePlugins( state ),
-		canUserUseCalypsoStore: canCurrentUserUseCalypsoStore( state, siteId ),
 		canUserUseWooCommerceCoreStore: canCurrentUserUseWooCommerceCoreStore( state, siteId ),
 		canUserUseEarn: canCurrentUserUseEarn( state, siteId ),
 		canUserUseCustomerHome: canCurrentUserUseCustomerHome( state, siteId ),
