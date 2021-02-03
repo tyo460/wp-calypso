@@ -76,8 +76,7 @@ const Home = ( {
 		);
 	}
 
-	if ( 'purchase-success' === noticeType ) {
-		const reduxDispatch = useDispatch();
+	if ( 'purchase-success' === noticeType && layout ) {
 		const successMessage = translate( 'Your purchase has been completed!' );
 		reduxDispatch(
 			successNotice( successMessage, {
