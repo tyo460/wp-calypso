@@ -245,10 +245,11 @@ class SignupForm extends Component {
 	};
 
 	validate = ( fields, onComplete ) => {
+		const { isFieldTouchedStates } = this.state;
 		const fieldsForValidation = filter( [
-			'email',
-			'password',
-			this.props.displayUsernameInput && 'username',
+			isFieldTouchedStates.email && 'email',
+			isFieldTouchedStates.password && 'password',
+			isFieldTouchedStates.username && this.props.displayUsernameInput && 'username',
 			this.props.displayNameInput && 'firstName',
 			this.props.displayNameInput && 'lastName',
 		] );
@@ -308,11 +309,7 @@ class SignupForm extends Component {
 				}
 			}
 
-			const touchedFields = Object.entries( this.state.isFieldTouchedStates )
-				.filter( ( [ , value ] ) => value )
-				.map( ( [ key ] ) => key );
-
-			onComplete( error, messages, touchedFields );
+			onComplete( error, messages );
 			if ( ! this.state.validationInitialized ) {
 				this.setState( { validationInitialized: true } );
 			}
@@ -353,19 +350,33 @@ class SignupForm extends Component {
 		} );
 	};
 
+	isEmptyForm = () => {
+		const data = this.getUserData();
+		// When a user moves away from the signup form without having entered
+		// anything do not show error messages, think going to click log in.
+		if ( data.username.length === 0 && data.password.length === 0 && data.email.length === 0 ) {
+			return true;
+		}
+		return false;
+	};
+
 	handleBlur = ( event ) => {
-		const fieldId = event.target.id;
-		// Ensure that username and password field validation does not trigger prematurely
-		if ( fieldId === 'password' ) {
-			this.setState( { focusPassword: true }, () => {
-				this.validateAndSaveForm();
-			} );
+		// Form remains untouched until at least one input is administered
+		// When a user moves away from the signup form without having entered
+		// anything do not show error messages, think going to click log in.
+		if ( this.isEmptyForm() ) {
 			return;
 		}
-		if ( fieldId === 'username' ) {
-			this.setState( { focusUsername: true }, () => {
-				this.validateAndSaveForm();
-			} );
+
+		const fieldId = event.target.id;
+		// Ensure that username and password field validation does not trigger prematurely
+		if ( [ 'email', 'username', 'password' ].includes( fieldId ) ) {
+			this.setState(
+				{ isFieldTouchedStates: { ...this.state.isFieldTouchedStates, [ fieldId ]: true } },
+				() => {
+					this.validateAndSaveForm();
+				}
+			);
 			return;
 		}
 
@@ -373,20 +384,34 @@ class SignupForm extends Component {
 	};
 
 	validateAndSaveForm = () => {
-		const data = this.getUserData();
-		// When a user moves away from the signup form without having entered
-		// anything do not show error messages, think going to click log in.
-		if ( data.username.length === 0 && data.password.length === 0 && data.email.length === 0 ) {
-			return;
-		}
-
 		this.formStateController.sanitize();
 		this.formStateController.validate();
 		this.props.save && this.props.save( this.state.form );
 	};
 
+	touchAllFieldsAndValidate = () => {
+		this.setState(
+			{
+				isFieldTouchedStates: {
+					firstName: true,
+					lastName: true,
+					username: true,
+					password: true,
+					email: true,
+				},
+			},
+			() => {
+				this.validateAndSaveForm();
+			}
+		);
+	};
+
 	handleSubmit = ( event ) => {
 		event.preventDefault();
+
+		if ( this.isEmptyForm() ) {
+			this.touchAllFieldsAndValidate();
+		}
 
 		if ( this.state.submitting ) {
 			return;
