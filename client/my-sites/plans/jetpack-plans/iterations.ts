@@ -9,7 +9,6 @@ import { getUrlParts } from 'calypso/lib/url/url-parts';
 
 export enum Iterations {
 	I5 = 'i5',
-	SPP = 'spp',
 }
 const iterationNames: string[] = Object.values( Iterations );
 
@@ -40,8 +39,6 @@ const getCurrentCROIterationName = (): Iterations => {
 		}
 	}
 
-	// Iterations.SPP still exists for now,
-	// but the test is over, so we don't need (or want) to call `abtest`.
 	// Instead, always return the default iteration, Iterations.I5.
 	return Iterations.I5;
 };

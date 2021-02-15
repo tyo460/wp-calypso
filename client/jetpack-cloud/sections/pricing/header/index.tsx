@@ -25,18 +25,10 @@ import './style.scss';
 
 const Header: React.FC< Props > = ( { urlQueryArgs } ) => {
 	const translate = useTranslate();
-
 	const iterationClassName = useMemo(
 		() => getForCurrentCROIteration( ( variation: Iterations ) => `iteration-${ variation }` ),
 		[]
 	) as Iterations;
-	const title = useMemo(
-		() =>
-			getForCurrentCROIteration( {
-				[ Iterations.SPP ]: translate( 'Security, performance, and marketing tools for WordPress' ),
-			} ) || translate( 'Security, performance, and marketing tools made for WordPress' ),
-		[ translate ]
-	);
 
 	return (
 		<>
@@ -47,7 +39,9 @@ const Header: React.FC< Props > = ( { urlQueryArgs } ) => {
 			<div className={ classNames( 'header', iterationClassName ) }>
 				<FormattedHeader
 					className="header__main-title"
-					headerText={ preventWidows( title ) }
+					headerText={ preventWidows(
+						translate( 'Security, performance, and marketing tools made for WordPress' )
+					) }
 					align="center"
 				/>
 			</div>
