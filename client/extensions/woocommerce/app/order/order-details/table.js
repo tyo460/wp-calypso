@@ -8,11 +8,12 @@ import Gridicon from 'calypso/components/gridicon';
 import { localize } from 'i18n-calypso';
 import { every, find, findIndex, get, isNaN, noop } from 'lodash';
 import formatCurrency from '@automattic/format-currency';
+import { VisuallyHidden } from '@wordpress/components';
 
 /**
  * Internal dependencies
  */
-import { Button, ScreenReaderText } from '@automattic/components';
+import { Button } from '@automattic/components';
 import FormLabel from 'calypso/components/forms/form-label';
 import FormSettingExplanation from 'calypso/components/forms/form-setting-explanation';
 import FormTextInput from 'calypso/components/forms/form-text-input';
@@ -91,7 +92,7 @@ class OrderDetailsTable extends Component {
 				</TableItem>
 				{ isEditing && (
 					<TableItem isHeader className="order-details__item-delete">
-						<ScreenReaderText>{ translate( 'Delete' ) }</ScreenReaderText>
+						<VisuallyHidden>{ translate( 'Delete' ) }</VisuallyHidden>
 					</TableItem>
 				) }
 			</TableRow>
@@ -152,9 +153,9 @@ class OrderDetailsTable extends Component {
 			return (
 				<Fragment>
 					<FormLabel htmlFor={ inputId }>
-						<ScreenReaderText>
+						<VisuallyHidden>
 							{ translate( 'Quantity of %(item)s', { args: { item: item.name } } ) }
-						</ScreenReaderText>
+						</VisuallyHidden>
 					</FormLabel>
 
 					<FormTextInput

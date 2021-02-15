@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { clone, get, setWith } from 'lodash';
 import { localize } from 'i18n-calypso';
+import { VisuallyHidden } from '@wordpress/components';
 
 /**
  * Internal dependencies
@@ -23,7 +24,6 @@ import { getOrderFeeCost, getOrderRefundTotal } from 'woocommerce/lib/order-valu
 import OrderLineItem from '../order-details/line-item';
 import OrderTotalRow from '../order-details/row-total';
 import PriceInput from 'woocommerce/components/price-input';
-import { ScreenReaderText } from '@automattic/components';
 import Table from 'woocommerce/components/table';
 import TableRow from 'woocommerce/components/table/table-row';
 import TableItem from 'woocommerce/components/table/table-item';
@@ -156,9 +156,9 @@ class OrderRefundTable extends Component {
 		return (
 			<OrderLineItem key={ item.id } isEditing item={ item } order={ order } site={ site }>
 				<FormLabel htmlFor={ inputId }>
-					<ScreenReaderText>
+					<VisuallyHidden>
 						{ translate( 'Quantity of %(item)s', { args: { item: item.name } } ) }
-					</ScreenReaderText>
+					</VisuallyHidden>
 				</FormLabel>
 
 				<FormTextInput
@@ -192,9 +192,9 @@ class OrderRefundTable extends Component {
 				</TableItem>
 				<TableItem colSpan="2" className="order-payment__item-total order-details__item-total">
 					<FormLabel htmlFor={ inputId }>
-						<ScreenReaderText>
+						<VisuallyHidden>
 							{ translate( 'Value of fee %(item)s', { args: { item: item.name } } ) }
-						</ScreenReaderText>
+						</VisuallyHidden>
 					</FormLabel>
 					<PriceInput
 						id={ inputId }

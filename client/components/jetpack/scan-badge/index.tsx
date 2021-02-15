@@ -4,11 +4,11 @@
 import React, { FunctionComponent } from 'react';
 import { useTranslate } from 'i18n-calypso';
 import { isNumber } from 'lodash';
+import { VisuallyHidden } from '@wordpress/components';
 
 /**
  * Internal dependencies
  */
-import { ScreenReaderText } from '@automattic/components';
 import Badge from 'calypso/components/badge';
 import './style.scss';
 
@@ -55,14 +55,14 @@ const ScanBadge: FunctionComponent< Props > = ( { numberOfThreatsFound, progress
 						}
 					) }
 				</span>
-				<ScreenReaderText>
+				<VisuallyHidden>
 					{ translate( '%(number)d threat', '%(number)d threats', {
 						count: numberOfThreatsFound,
 						args: {
 							number: numberOfThreatsFound,
 						},
 					} ) }
-				</ScreenReaderText>
+				</VisuallyHidden>
 			</Badge>
 		);
 	}

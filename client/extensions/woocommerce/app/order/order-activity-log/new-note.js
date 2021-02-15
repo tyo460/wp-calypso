@@ -6,11 +6,12 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { localize } from 'i18n-calypso';
 import PropTypes from 'prop-types';
+import { VisuallyHidden } from '@wordpress/components';
 
 /**
  * Internal dependencies
  */
-import { Button, ScreenReaderText } from '@automattic/components';
+import { Button } from '@automattic/components';
 import { createNote } from 'woocommerce/state/sites/orders/notes/actions';
 import FormFieldSet from 'calypso/components/forms/form-fieldset';
 import FormLabel from 'calypso/components/forms/form-label';
@@ -60,9 +61,9 @@ class CreateOrderNote extends Component {
 		return (
 			<div className="order-activity-log__new-note">
 				<FormFieldSet className="order-activity-log__new-note-content">
-					<ScreenReaderText>
+					<VisuallyHidden>
 						<FormLabel htmlFor="note">{ translate( 'Add a note' ) }</FormLabel>
-					</ScreenReaderText>
+					</VisuallyHidden>
 					<FormTextarea
 						id="note"
 						value={ this.state.note }

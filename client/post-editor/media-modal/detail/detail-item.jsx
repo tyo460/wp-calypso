@@ -10,6 +10,7 @@ import { flowRight, get, includes, noop } from 'lodash';
 import { localize } from 'i18n-calypso';
 import url from 'url';
 import Gridicon from 'calypso/components/gridicon';
+import { VisuallyHidden } from '@wordpress/components';
 
 /**
  * Internal dependencies
@@ -21,7 +22,7 @@ import EditorMediaModalDetailPreviewImage from './detail-preview-image';
 import EditorMediaModalDetailPreviewVideo from './detail-preview-video';
 import EditorMediaModalDetailPreviewAudio from './detail-preview-audio';
 import EditorMediaModalDetailPreviewDocument from './detail-preview-document';
-import { Button, ScreenReaderText } from '@automattic/components';
+import { Button } from '@automattic/components';
 import QueryJetpackModules from 'calypso/components/data/query-jetpack-modules';
 import versionCompare from 'calypso/lib/version-compare';
 import { getMimePrefix, isItemBeingUploaded, isVideoPressItem } from 'calypso/lib/media/utils';
@@ -230,7 +231,7 @@ export class EditorMediaModalDetailItem extends Component {
 		return (
 			<button onClick={ onShowPreviousItem } className="editor-media-modal-detail__previous">
 				<Gridicon icon="chevron-left" size={ 36 } />
-				<ScreenReaderText>{ translate( 'Previous' ) }</ScreenReaderText>
+				<VisuallyHidden>{ translate( 'Previous' ) }</VisuallyHidden>
 			</button>
 		);
 	}
@@ -245,7 +246,7 @@ export class EditorMediaModalDetailItem extends Component {
 		return (
 			<button onClick={ onShowNextItem } className="editor-media-modal-detail__next">
 				<Gridicon icon="chevron-right" size={ 36 } />
-				<ScreenReaderText>{ translate( 'Next' ) }</ScreenReaderText>
+				<VisuallyHidden>{ translate( 'Next' ) }</VisuallyHidden>
 			</button>
 		);
 	}

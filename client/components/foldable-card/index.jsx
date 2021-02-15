@@ -7,11 +7,12 @@ import React, { Component } from 'react';
 import classNames from 'classnames';
 import { localize } from 'i18n-calypso';
 import { noop } from 'lodash';
+import { VisuallyHidden } from '@wordpress/components';
 
 /**
  * Internal Dependencies
  */
-import { Card, CompactCard, ScreenReaderText } from '@automattic/components';
+import { Card, CompactCard } from '@automattic/components';
 import Gridicon from 'calypso/components/gridicon';
 
 /**
@@ -107,7 +108,7 @@ class FoldableCard extends Component {
 					className="foldable-card__action foldable-card__expand"
 					onClick={ clickAction }
 				>
-					<ScreenReaderText>{ screenReaderText }</ScreenReaderText>
+					<VisuallyHidden>{ screenReaderText }</VisuallyHidden>
 					<Gridicon icon={ this.props.icon } size={ iconSize } />
 				</button>
 			);

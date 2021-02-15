@@ -8,11 +8,15 @@ import { useTranslate } from 'i18n-calypso';
 import { Moment } from 'moment';
 
 /**
+ * WordPress components
+ */
+import { VisuallyHidden } from '@wordpress/components';
+
+/**
  * Internal dependencies
  */
 import { Button } from '@automattic/components';
 import ButtonGroup from 'calypso/components/button-group';
-import { ScreenReaderText } from '@automattic/components';
 
 interface Props {
 	startDate: Date | Moment | null | undefined;
@@ -77,7 +81,7 @@ const DateRangeTrigger: FunctionComponent< Props > = ( {
 					disabled={ ! canReset }
 					title="Clear date selection"
 				>
-					<ScreenReaderText>{ translate( 'Clear date selection' ) }</ScreenReaderText>
+					<VisuallyHidden>{ translate( 'Clear date selection' ) }</VisuallyHidden>
 					<Gridicon aria-hidden="true" icon="cross" />
 				</Button>
 			) }
