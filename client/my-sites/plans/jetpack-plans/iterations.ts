@@ -7,9 +7,8 @@ import { getUrlParts } from 'calypso/lib/url/url-parts';
  * Iterations
  */
 
-export enum Iterations {
-	I5 = 'i5',
-}
+export enum Iterations {}
+
 const iterationNames: string[] = Object.values( Iterations );
 
 /**
@@ -26,7 +25,7 @@ const iterationNames: string[] = Object.values( Iterations );
  * @see getForCurrentCROIteration
  * @see doForCurrentCROIteration
  */
-const getCurrentCROIterationName = (): Iterations => {
+const getCurrentCROIterationName = (): Iterations | null => {
 	// If we see a query parameter, obey that,
 	// regardless of any active A/B test value
 	if ( typeof window !== 'undefined' ) {
@@ -39,8 +38,7 @@ const getCurrentCROIterationName = (): Iterations => {
 		}
 	}
 
-	// Instead, always return the default iteration, Iterations.I5.
-	return Iterations.I5;
+	return null;
 };
 
 type IterationValueFunction< T > = ( key: Iterations ) => T | undefined;
