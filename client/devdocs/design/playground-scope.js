@@ -7,7 +7,6 @@ export {
 	CompactCard,
 	ProgressBar,
 	Ribbon,
-	ScreenReaderText,
 	Suggestions,
 } from '@automattic/components';
 

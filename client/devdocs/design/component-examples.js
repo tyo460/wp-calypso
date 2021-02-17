@@ -63,7 +63,6 @@ export { default as PromoCard } from 'calypso/components/promo-section/promo-car
 export { default as Ranges } from 'calypso/components/forms/range/docs/example';
 export { default as Rating } from 'calypso/components/rating/docs/example';
 export { default as Ribbon } from '@automattic/components/src/ribbon/docs/example';
-export { default as ScreenReaderTextExample } from '@automattic/components/src/screen-reader-text/docs/example';
 export { default as SearchDemo } from 'calypso/components/search/docs/example';
 export { default as SectionHeader } from 'calypso/components/section-header/docs/example';
 export { default as SectionNav } from 'calypso/components/section-nav/docs/example';
