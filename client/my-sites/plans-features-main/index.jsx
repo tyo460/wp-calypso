@@ -197,6 +197,7 @@ export class PlansFeaturesMain extends Component {
 					siteId={ siteId }
 					isReskinned={ isReskinned }
 					isInVerticalScrollingPlansExperiment={ isInVerticalScrollingPlansExperiment }
+					kindOfPlanTypeSelector={ this.getKindOfPlanTypeSelector( this.props ) }
 				/>
 			</div>
 		);
