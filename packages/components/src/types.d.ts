@@ -11,4 +11,14 @@ declare module '@wordpress/components' {
 		as?: React.ElementType;
 		className?: string;
 	} ): JSX.Element;
+
+	export namespace Slot {
+		export interface Props {
+			children: React.ReactNode;
+			name?: string;
+			bubblesVirtually?: boolean;
+		}
+	}
+
+	export function Slot( props: Slot.Props ): JSX.Element;
 }
