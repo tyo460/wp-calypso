@@ -8,12 +8,12 @@ import { Link } from 'react-router-dom';
 import { ActionButtons, NextButton, SubTitle, Title } from '@automattic/onboarding';
 import { __, sprintf } from '@wordpress/i18n';
 import { createInterpolateElement } from '@wordpress/element';
-import { TextControl, SVG, Path, Tooltip, Circle, Rect } from '@wordpress/components';
+import { TextControl, SVG, Path, Tooltip, Circle, Rect, Button } from '@wordpress/components';
 import DomainPicker, { mockDomainSuggestion } from '@automattic/domain-picker';
 import classNames from 'classnames';
 import { Icon, check } from '@wordpress/icons';
 import { useSelect, useDispatch } from '@wordpress/data';
-import { useLocale } from '@automattic/i18n-utils';
+import { useLocalizeUrl, useLocale } from '@automattic/i18n-utils';
 
 /**
  * Internal dependencies
@@ -515,6 +515,8 @@ type StepIndexRenderFunction = ( renderOptions: {
 } ) => React.ReactNode;
 
 const Summary: React.FunctionComponent = () => {
+	const { siteId } = React.useContext( LaunchContext );
+
 	const [
 		hasSelectedDomain,
 		isSiteTitleStepVisible,
@@ -525,34 +527,43 @@ const Summary: React.FunctionComponent = () => {
 		const { isSiteTitleStepVisible, domain, planProductId } = launchStore.getState();
 
 		return [ launchStore.hasSelectedDomain(), isSiteTitleStepVisible, domain, planProductId ];
-	} );
+	}, [] );
 
-	const { isSelectedPlanFree } = useSelect( ( select ) => {
-		const plansStore = select( PLANS_STORE );
-
-		return {
-			isSelectedPlanFree: plansStore.isPlanProductFree( selectedPlanProductId ),
-		};
-	} );
+	const isSelectedPlanPaid = useSelect(
+		( select ) => !! select( LAUNCH_STORE ).getPaidPlanProductId(),
+		[]
+	);
 
 	const { launchSite } = useDispatch( SITE_STORE );
-	const { setModalDismissible, showModalTitle, showSiteTitleStep } = useDispatch( LAUNCH_STORE );
+	const {
+		setModalDismissible,
+		unsetModalDismissible,
+		showModalTitle,
+		showSiteTitleStep,
+	} = useDispatch( LAUNCH_STORE );
+
 	const { title, updateTitle } = useTitle();
 	const { siteSubdomain, hasPaidDomain } = useSiteDomains();
 	const { onDomainSelect, onExistingSubdomainSelect, currentDomain } = useDomainSelection();
 	const { domainSearch, isLoading } = useDomainSearch();
-	const { isPaidPlan: hasPaidPlan } = useSite();
+	const { hasPaidPlan } = useSite();
 
-	const { siteId, redirectTo } = React.useContext( LaunchContext );
+	const locale = useLocale();
+	const localizeUrl = useLocalizeUrl();
 
-	const { goToCheckout } = useCart();
+	const { goToCheckoutAndLaunch, isCartUpdating } = useCart();
 
-	// When the summary view is active, the modal should be dismissible, and
+	// When the summary view is active, if cart is not updating, the modal should be dismissible, and
 	// the modal title should be visible
 	React.useEffect( () => {
-		setModalDismissible();
+		if ( isCartUpdating ) {
+			unsetModalDismissible();
+		} else {
+			setModalDismissible();
+		}
+
 		showModalTitle();
-	}, [ setModalDismissible, showModalTitle ] );
+	}, [ isCartUpdating, setModalDismissible, showModalTitle, unsetModalDismissible ] );
 
 	// If the user needs to change the site title, always show the site title
 	// step to the user when in this launch flow.
@@ -563,22 +574,16 @@ const Summary: React.FunctionComponent = () => {
 		}
 	}, [ title, showSiteTitleStep, isSiteTitleStepVisible ] );
 
+	// Launch the site directly if Free plan and subdomain are selected.
+	// Otherwise, show checkout as the next step.
 	const handleLaunch = () => {
-		launchSite( siteId );
-		if ( selectedDomain || ! isSelectedPlanFree ) {
-			goToCheckout();
+		// checking for not having a selected paid plan instead of checking for a selected Free plan because
+		// user may be entering the launch flow after they have paid for a plan.
+		if ( ! selectedDomain && ! isSelectedPlanPaid ) {
+			launchSite( siteId );
+		} else {
+			goToCheckoutAndLaunch();
 		}
-	};
-
-	const onAskForHelpClick = ( event: React.MouseEvent< HTMLAnchorElement, MouseEvent > ) => {
-		const helpHref = ( event.target as HTMLAnchorElement ).getAttribute( 'href' );
-
-		if ( ! helpHref ) {
-			return;
-		}
-
-		redirectTo( helpHref );
-		event.preventDefault();
 	};
 
 	// Prepare Steps
@@ -683,8 +688,10 @@ const Summary: React.FunctionComponent = () => {
 			<div className="focused-launch-summary__actions-wrapper">
 				<ActionButtons className="focused-launch-summary__launch-action-bar">
 					<NextButton
-						className="focused-launch-summary__launch-button"
-						disabled={ ! isReadyToLaunch }
+						className={ classNames( 'focused-launch-summary__launch-button', {
+							'focused-launch-summary__launch-button--is-loading': isCartUpdating,
+						} ) }
+						disabled={ ! isReadyToLaunch || isCartUpdating }
 						onClick={ handleLaunch }
 					>
 						{ __( 'Launch your site', __i18n_text_domain__ ) }
@@ -693,9 +700,14 @@ const Summary: React.FunctionComponent = () => {
 
 				<div className="focused-launch-summary__ask-for-help">
 					<p>{ __( 'Questions? Our experts can assist.', __i18n_text_domain__ ) }</p>
-					<a href="/help" onClick={ onAskForHelpClick }>
+					<Button
+						isLink
+						href={ localizeUrl( 'https://wordpress.com/help/contact', locale ) }
+						target="_blank"
+						rel="noopener noreferrer"
+					>
 						{ __( 'Ask a Happiness Engineer', __i18n_text_domain__ ) }
-					</a>
+					</Button>
 				</div>
 			</div>
 		</div>
