@@ -21,5 +21,3 @@ export const watermarks = keyedReducer(
 		return state;
 	} )
 );
-
-watermarks.hasCustomPersistence = true;
