@@ -48,7 +48,7 @@ project {
 	buildType(CheckCodeStyle)
 	buildType(CheckCodeStyleBranch)
 	buildType(BuildDockerImage)
-	buildType(RunBrowserE2eTests)
+	buildType(RunCanaryE2eTests)
 
 	params {
 		param("env.NODE_OPTIONS", "--max-old-space-size=32000")
@@ -801,10 +801,9 @@ object CheckCodeStyleBranch : BuildType({
 	}
 })
 
-object RunBrowserE2eTests : BuildType({
-	id("calypso_RunCanaryE2eTests")
-	name = "Browser e2e tests"
-	description = "Run e2e tests in a browser"
+object RunCanaryE2eTests : BuildType({
+	name = "Canary e2e tests"
+	description = "Run canary e2e tests"
 
 	artifactRules = """
 		reports => reports
@@ -842,7 +841,7 @@ object RunBrowserE2eTests : BuildType({
 			dockerRunParameters = "-u %env.UID%"
 		}
 		script {
-			name = "Run e2e tests"
+			name = "Run e2e tests: Canary (mobile, desktop)"
 			scriptContent = """
 				#!/bin/bash
 
