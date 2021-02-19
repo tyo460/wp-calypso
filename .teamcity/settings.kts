@@ -802,7 +802,7 @@ object CheckCodeStyleBranch : BuildType({
 })
 
 object RunBrowserE2eTests : BuildType({
-	id("calypso_RunBrowserE2eTests")
+	id("calypso_RunCanaryE2eTests")
 	name = "Browser e2e tests"
 	description = "Run e2e tests in a browser"
 
