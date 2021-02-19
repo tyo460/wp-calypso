@@ -861,6 +861,7 @@ object RunCanaryE2eTests : BuildType({
 				export NODE_CONFIG_ENV=test
 				export MAGELLANDEBUG=true
 				export TEST_VIDEO=true
+				export SUITE_TAG=parallel
 
 				IMAGE_URL="https://calypso.live?image=registry.a8c.com/calypso/app:build-${BuildDockerImage.depParamRefs.buildNumber}";
 				MAX_LOOP=10
@@ -891,7 +892,7 @@ object RunCanaryE2eTests : BuildType({
 				openssl aes-256-cbc -md sha1 -d -in ./config/encrypted.enc -out ./config/local-test.json -k "%CONFIG_E2E_ENCRYPTION_KEY%"
 
 				# Run the test
-				./run.sh -R -a %E2E_WORKERS% -g -s "desktop" -u "${'$'}{URL%/}"
+				./run.sh -R -a %E2E_WORKERS% -g -s "desktop" -u "${'$'}{URL%/}" -f specs*/**/*spec.js
 			""".trimIndent()
 			dockerImagePlatform = ScriptBuildStep.ImagePlatform.Linux
 			dockerImage = "%docker_image_e2e%"
